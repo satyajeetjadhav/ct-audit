@@ -15,123 +15,64 @@
     <h1>Audit results</h1>
     <div class="mt-4" *ngIf="metadata">
       <h2>Metadata</h2>
-      <table class="table table-hover">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Item</th>
-            <th scope="col">Status</th>
-            <th scope="col">Comment</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of metadata | keyvalue">
-            <td>{{item.key}}</td>
-            <td>{{item.value}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="mt-4" *ngFor="let queueItem of queue; let i=index">
-      <div class="alert alert-secondary" role="alert">
-        <h3>Queue <span class="badge badge-light">{{i+1}}</span>
-        </h3>
-      </div>
-      <div class="mt-4" *ngIf="queueItem.meta">
-        <h2>Meta Updates</h2>
-        <div class="mt-4" *ngFor="let datum of queueItem.meta">
-          <div class="alert alert-primary" role="alert">
-            CTID : {{datum.g}}
-          </div>
-          <table class="table table-hover">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Key</th>
-                <th scope="col">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of datum.af | keyvalue">
-                <td>{{item.key}}</td>
-                <td>{{item.value}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="mt-4" *ngIf="queueItem.events">
-        <h2 *ngIf="queueItem.events.length>0">Events</h2>
-        <div class="mt-4" *ngFor="let event of queueItem.events">
-          <div class="alert alert-success" role="alert">
-            <h5>{{event.evtName}} <span class="badge badge-dark" *ngIf="event.f">First Session</span></h5>
-            <p>{{event.ep | datePipe}}</p>
-          </div>
-          <table class="table table-hover">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Key</th>
-                <th scope="col">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of event.evtData | keyvalue">
-                <td>{{item.key}}</td>
-                <td>{{item.value}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="mt-4" *ngIf="queueItem.profile">
-
-        <h2 *ngIf="queueItem.profile.length>0">Profile Updates</h2>
-        <div class="mt-4" *ngFor="let profileUpdate of queueItem.profile">
-          <h5>{{profileUpdate.evtName}} <span class="badge badge-dark" *ngIf="profileUpdate.f">First Session</span></h5>
-          <p>{{profileUpdate.ep | datePipe}}</p>
-          <table class="table table-hover">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Key</th>
-                <th scope="col">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of profileUpdate.profile | keyvalue">
-                <td>{{item.key}}</td>
-                <td>{{item.value}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="mt-4" *ngIf="queueItem.data">
-        <h2 *ngIf="queueItem.data.length>0">Data Updates</h2>
-        <div class="mt-4" *ngFor="let datum of queueItem.data">
-          <div class="alert alert-info" role="alert">
-            <h5>{{datum.data.action}} <span class="badge badge-dark" *ngIf="datum.f">First Session</span></h5>
-            <p>{{datum.ep | datePipe}}</p>
-          </div>
-          <table class="table table-hover">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Key</th>
-                <th scope="col">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of datum.data | keyvalue">
-                <td>{{item.key}}</td>
-                <td>{{item.value}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <hr>
-
+      <p><span *ngFor="let item of metadata | keyvalue" placement="top" ngbTooltip="{{item.key}}">{{item.value}} |
+        </span></p>
     </div>
   </div>
-  <!-- <router-outlet></router-outlet> -->
+
+  <div class="mt-4" *ngFor="let queueItem of queue; let i=index">
+    <div class="alert alert-secondary" role="alert">
+      <h3>Queue <span class="badge badge-light">{{i+1}}</span>
+      </h3>
+    </div>
+    <div class="mt-4" *ngIf="queueItem.meta">
+      <h2>Meta Updates</h2>
+      <div class="mt-4" *ngFor="let datum of queueItem.meta">
+        <div class="alert alert-primary" role="alert">
+          CTID : {{datum.g}}
+        </div>
+        <p><span *ngFor="let item of datum.af | keyvalue" placement="top" ngbTooltip="{{item.key}}">{{item.value}} |
+          </span></p>
+      </div>
+    </div>
+
+    <div class="mt-4" *ngIf="queueItem.events">
+      <h2 *ngIf="queueItem.events.length>0">Events</h2>
+      <div class="mt-4" *ngFor="let event of queueItem.events">
+        <div class="alert alert-success" role="alert">
+          <h5>{{event.evtName}} <span class="badge badge-dark" *ngIf="event.f">First Session</span></h5>
+          <p>{{event.ep | datePipe}}</p>
+          <p><span *ngFor="let item of event.evtData | keyvalue" placement="top"
+              ngbTooltip="{{item.key}}">{{item.value}} | </span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4" *ngIf="queueItem.profile">
+
+      <h2 *ngIf="queueItem.profile.length>0">Profile Updates</h2>
+      <div class="mt-4" *ngFor="let profileUpdate of queueItem.profile">
+        <h5>{{profileUpdate.evtName}} <span class="badge badge-dark" *ngIf="profileUpdate.f">First Session</span></h5>
+        <p>{{profileUpdate.ep | datePipe}}</p>
+
+        <p><span *ngFor="let item of profileUpdate.profile | keyvalue" placement="top"
+            ngbTooltip="{{item.key}}">{{item.value}} | </span></p>
+      </div>
+    </div>
+
+    <div class="mt-4" *ngIf="queueItem.data">
+      <h2 *ngIf="queueItem.data.length>0">Data Updates</h2>
+      <div class="mt-4" *ngFor="let datum of queueItem.data">
+        <div class="alert alert-info" role="alert">
+          <h5>{{datum.data.action}} <span class="badge badge-dark" *ngIf="datum.f">First Session</span></h5>
+          <p>{{datum.ep | datePipe}}</p>
+          <p><span *ngFor="let item of datum.data | keyvalue" placement="top" ngbTooltip="{{item.key}}">{{item.value}} |
+            </span></p>
+
+        </div>
+      </div>
+    </div>
+    <hr>
+
+  </div>
+  <!--router-outlet></router-outlet -->
