@@ -8,15 +8,15 @@ export class LogParserIosService {
   flags = {
     AccountDetails: false,
     PushNotificationEnabled: false,
-    registerPNDataEntry : false
+    registerPNDataEntry: false
   }
 
 
   result = {
     metadata: {
-      CleverTapRegion: false,
-      CleverTapAccountID: false,
-      CleverTapToken: false,
+      CleverTapRegion: '',
+      CleverTapAccountID: '',
+      CleverTapToken: '',
       PushNotificationEnabled: false,
       SDK_Version: '',
       Profile_Method: '',
@@ -31,13 +31,13 @@ export class LogParserIosService {
   init() {
     this.result = {
       metadata: {
-       CleverTapRegion: false,
-       CleverTapAccountID: false,
-       CleverTapToken: false,
-       SDK_Version: '',
-       PushNotificationEnabled: false,
-       Profile_Method: '',
-       Push_Token: ''
+        CleverTapRegion: '',
+        CleverTapAccountID: '',
+        CleverTapToken: '',
+        PushNotificationEnabled: false,
+        SDK_Version: '',
+        Profile_Method: '',
+        Push_Token: ''
       },
       queue: []
     }
@@ -51,7 +51,7 @@ export class LogParserIosService {
         for (var key in this.flags) {
           if (!(this.flags[key])) {
             switch (key) {
-              case 'AccountDetails':  {
+              case 'AccountDetails': {
                 //statements; 
                 this.accountDetails(line);
                 break;
@@ -70,7 +70,7 @@ export class LogParserIosService {
         }
       });
       logLines.forEach(line => {
-        if(line.includes('onUserLogin')){
+        if (line.includes('onUserLogin')) {
           this.result.metadata.Profile_Method = 'onUserLogin';
         }
         this.queuedEvent(line);
@@ -92,15 +92,15 @@ export class LogParserIosService {
     }
   }
 
-  checkForPN(logLine : String){
-  	if (logLine.includes('registering APNs device token')){
-  		this.flags.PushNotificationEnabled = true;
-  		this.result.metadata.PushNotificationEnabled = true;
-  	}
+  checkForPN(logLine: String) {
+    if (logLine.includes('registering APNs device token')) {
+      this.flags.PushNotificationEnabled = true;
+      this.result.metadata.PushNotificationEnabled = true;
+    }
   }
 
-  queuedEvent(logLine : String){
-  	if (logLine.includes('Sending')) {
+  queuedEvent(logLine: String) {
+    if (logLine.includes('Sending')) {
       let tempStr = (logLine.split('Sending '))[1]
       //console.log('Temp String '+tempStr);
       let eventJSONArrayString = (tempStr.split('to'))[0]
@@ -109,8 +109,8 @@ export class LogParserIosService {
       try {
         eventJSONArray = JSON.parse(eventJSONArrayString);
         //get sdk version
-      this.result.metadata.SDK_Version = eventJSONArray[0]['af']['SDK Version'];
-      //console.log('SDK Version'+eventJSONArray[0]['af']['SDK Version']);
+        this.result.metadata.SDK_Version = eventJSONArray[0]['af']['SDK Version'];
+        //console.log('SDK Version'+eventJSONArray[0]['af']['SDK Version']);
       } catch (e) {
         console.log(e);
         console.log(logLine);
@@ -127,14 +127,14 @@ export class LogParserIosService {
         } else if ((eventJSON['type'] === 'event')) {
           queueObj.events.push(eventJSON);
         } else if ((eventJSON['type'] === 'data')) {
-        if(this.flags.PushNotificationEnabled){
-              this.result.metadata.Push_Token = eventJSON['data']['id']
-            }
-          if(!this.flags.registerPNDataEntry){
+          if (this.flags.PushNotificationEnabled) {
+            this.result.metadata.Push_Token = eventJSON['data']['id']
+          }
+          if (!this.flags.registerPNDataEntry) {
             this.flags.registerPNDataEntry = true;
             queueObj.data.push(eventJSON);
           }
-          
+
         } else if ((eventJSON['type'] === 'meta')) {
           queueObj.meta.push(eventJSON);
         }
