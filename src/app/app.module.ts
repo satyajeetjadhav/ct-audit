@@ -5,11 +5,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DatePipePipe } from './date-pipe.pipe';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { ReversePipe } from './reverse.pipe';
+import { MetaToEnglishPipe } from './meta-to-english.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DatePipePipe
+    DatePipePipe,
+    ReversePipe,
+    MetaToEnglishPipe
   ],
   imports: [
     BrowserModule,

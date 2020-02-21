@@ -15,17 +15,20 @@
     <h1>Audit results</h1>
     <div class="mt-4" *ngIf="metadata">
       <h2>Metadata</h2>
-      <p><span *ngFor="let item of metadata | keyvalue" placement="top" ngbTooltip="{{item.key}}">{{item.value}} |
-        </span></p>
+      <!--p><span *ngFor="let item of metadata | keyvalue" placement="top" ngbTooltip="{{item.key}}">{{item.value}} |
+        </span></p-->
+      <div *ngFor="let item of metadata | keyvalue">
+        <p [ngClass]="{'text-success':item.value,'text-danger': !item.value}">{{item | metaToEnglish}}</p>
+      </div>
     </div>
   </div>
 
   <div class="mt-4" *ngFor="let queueItem of queue; let i=index">
-    <div class="alert alert-secondary" role="alert">
+    <!--div class="alert alert-secondary" role="alert">
       <h3>Queue <span class="badge badge-light">{{i+1}}</span>
       </h3>
-    </div>
-    <div class="mt-4" *ngIf="queueItem.meta">
+    </div-->
+    <!--div class="mt-4" *ngIf="queueItem.meta">
       <h2>Meta Updates</h2>
       <div class="mt-4" *ngFor="let datum of queueItem.meta">
         <div class="alert alert-primary" role="alert">
@@ -34,19 +37,7 @@
         <p><span *ngFor="let item of datum.af | keyvalue" placement="top" ngbTooltip="{{item.key}}">{{item.value}} |
           </span></p>
       </div>
-    </div>
-
-    <div class="mt-4" *ngIf="queueItem.events">
-      <h2 *ngIf="queueItem.events.length>0">Events</h2>
-      <div class="mt-4" *ngFor="let event of queueItem.events">
-        <div class="alert alert-success" role="alert">
-          <h5>{{event.evtName}} <span class="badge badge-dark" *ngIf="event.f">First Session</span></h5>
-          <p>{{event.ep | datePipe}}</p>
-          <p><span *ngFor="let item of event.evtData | keyvalue" placement="top"
-              ngbTooltip="{{item.key}}">{{item.value}} | </span></p>
-        </div>
-      </div>
-    </div>
+    </div-->
 
     <div class="mt-4" *ngIf="queueItem.profile">
 
@@ -73,6 +64,20 @@
       </div>
     </div>
     <hr>
-
   </div>
+
+  <h2 *ngIf="queue && queue.length>0">Events</h2>
+  <div class="mt-4" *ngFor="let queueItem of queue | reverse; let i=index">
+    <div class="mt-4" *ngIf="queueItem.events">
+      <div class="mt-4" *ngFor="let event of queueItem.events | reverse">
+        <div class="alert alert-success" role="alert">
+          <h5>{{event.evtName}} <span class="badge badge-dark" *ngIf="event.f">First Session</span> <span class="badge badge-dark ml-2" *ngIf="event.CTID">{{event.CTID}}</span></h5>
+          <p class="small">{{event.ep | datePipe}}</p>
+          <p><span *ngFor="let item of event.evtData | keyvalue" placement="top"
+              ngbTooltip="{{item.key}}">{{item.value}} | </span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!--router-outlet></router-outlet -->

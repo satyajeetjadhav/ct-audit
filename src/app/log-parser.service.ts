@@ -333,6 +333,7 @@ export class LogParserService {
     } else  */if (logLine.includes('Send queue contains')) {
       let eventJSONArrayString = logLine.split('items:')[1]
       let eventJSONArray;
+      let CTID;
       try {
         eventJSONArray = JSON.parse(eventJSONArrayString);
       } catch (e) {
@@ -349,10 +350,12 @@ export class LogParserService {
         if (eventJSON['type'] === 'profile') {
           queueObj.profile.push(eventJSON);
         } else if ((eventJSON['type'] === 'event')) {
+          eventJSON['CTID'] = CTID;
           queueObj.events.push(eventJSON);
         } else if ((eventJSON['type'] === 'data')) {
           queueObj.data.push(eventJSON);
         } else if ((eventJSON['type'] === 'meta')) {
+          CTID = eventJSON["g"];
           queueObj.meta.push(eventJSON);
         }
       });
