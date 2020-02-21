@@ -29,48 +29,52 @@ export class AppComponent {
 
   onSubmit(customerData) {
     // Process checkout data here
-    
+
     this.metadata = {};
     this.queue = [];
-    if(this.checkForOS(customerData.log)){
-        this.logParseriOS.parseLog(customerData.log).then(
-                result => {
-                      this.metadata = result['metadata'];
-                      this.queue = result['queue'];
-                          }
-              )
+    if (this.checkForOS(customerData.log)) {
+      this.logParseriOS.parseLog(customerData.log).then(
+        result => {
+          this.metadata = result['metadata'];
+          this.queue = result['queue'];
+        }
+      )
     }
-    else{
+    else {
       this.logParser.parseLog(customerData.log).then(
-                result => {
-                      this.metadata = result['metadata'];
-                      this.queue = result['queue'];
-                          }
-              )
+        result => {
+          this.metadata = result['metadata'];
+          this.queue = result['queue'];
+        }
+      )
     }
-
-
   }
 
   checkForOS(logData: String): boolean {
-    
+
     let logLines = logData.split('\n');
-    for(let line of logLines){
-        if(line.includes('New event processed:')){
-                return true;
-                break;
-          }
-          else if (line.includes('Queued Event:')){
-              return false;
-              break;
-          }
-          else{
-            continue;
-          }
-            
-        }
-        
+    for (let line of logLines) {
+      if (line.includes('New event processed:')) {
+        return true;
+        break;
+      }
+      else if (line.includes('Queued Event:')) {
+        return false;
+        break;
+      }
+      else {
+        continue;
+      }
+
     }
+
+  }
+
+  getProfileUrl(CTID: String) {
+    let region = this.metadata['AccountRegion'] === '' ? 'eu1' : this.metadata['AccountRegion'];
+    let accountId = this.metadata['AccountId'];
+    return 'https://' + region + '.dashboard.clevertap.com/' + accountId + '/' + CTID + '/profile-view.html';
+  }
 
 
 }

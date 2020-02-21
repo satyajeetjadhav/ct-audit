@@ -70,10 +70,14 @@
   <div class="mt-4" *ngFor="let queueItem of queue | reverse; let i=index">
     <div class="mt-4" *ngIf="queueItem.events">
       <div class="mt-4" *ngFor="let event of queueItem.events | reverse">
-        <div class="alert alert-success" role="alert">
-          <h5>{{event.evtName}} <span class="badge badge-dark" *ngIf="event.f">First Session</span> <span class="badge badge-dark ml-2" *ngIf="event.CTID">{{event.CTID}}</span></h5>
-          <p class="small">{{event.ep | datePipe}}</p>
-          <p><span *ngFor="let item of event.evtData | keyvalue" placement="top"
+        <div>
+          <h5>{{event.evtName}} <a class="small ml-2" *ngIf="event.CTID" href={{getProfileUrl(event.CTID)}}
+              target="_blank">
+              View Profile</a></h5>
+          <p class="small mb-0">{{event.ep | datePipe}}</p>
+          <p class="small">CTID : {{event.CTID}}</p>
+          <span class="badge badge-dark" *ngIf="event.f">First Session</span>
+          <p class="mt-2"><span *ngFor="let item of event.evtData | keyvalue" placement="top"
               ngbTooltip="{{item.key}}">{{item.value}} | </span></p>
         </div>
       </div>

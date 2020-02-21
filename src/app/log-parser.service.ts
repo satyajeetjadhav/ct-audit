@@ -177,7 +177,7 @@ export class LogParserService {
     if (logLine.includes('Account Region')) {
       this.flags.accountRegion = true;
       if (logLine.includes('Account Region not specified')) {
-        this.result.metadata.AccountRegion = 'Not set';
+        this.result.metadata.AccountRegion = '';
       } else {
         this.result.metadata.AccountRegion = 'logLine'
       }
@@ -344,7 +344,8 @@ export class LogParserService {
         events: [],
         profile: [],
         meta: [],
-        data: []
+        data: [],
+        CTID: ''
       }
       eventJSONArray.forEach(eventJSON => {
         if (eventJSON['type'] === 'profile') {

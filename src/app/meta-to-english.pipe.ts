@@ -15,7 +15,11 @@ export class MetaToEnglishPipe implements PipeTransform {
         }
       }
       case 'AccountRegion': {
-        return 'Account region is ' + item.value;
+        if(item.value ===''){
+          return 'Account region is not set.';
+        } else {
+          return 'Account region is ' + item.value;
+        }
       }
       case 'AccountId': {
         if (item.value.includes('TEST-')) {
