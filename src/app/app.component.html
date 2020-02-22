@@ -78,16 +78,17 @@
             <i class="material-icons text-danger" *ngIf="EDSMap.size>0 && !isEventInEDS(event.evtName)">
               check_circle_outline
             </i>
-            <a class="small ml-2" *ngIf="event.CTID" href={{getProfileUrl(event.CTID)}} target="_blank">
-              View Profile</a></h5>
+          </h5>
           <p class="small mb-0">{{event.ep | datePipe}}</p>
-          <p class="small">CTID : {{event.CTID}}</p>
+          <p class="small">CTID : {{event.CTID}} | <a class="small ml-2" *ngIf="event.CTID"
+              href={{getProfileUrl(event.CTID)}} target="_blank">
+              View Profile</a></p>
           <span class="badge badge-dark" *ngIf="event.f">First Session</span>
           <p class="mt-2">
             <span *ngFor="let item of event.evtData | keyvalue" placement="top" ngbTooltip="{{item.key}}">
               <span *ngIf="EDSMap.size>0"
                 [ngClass]="{'text-success':isEventPropertyInEDS(event.evtName, item.key),'text-danger': !isEventPropertyInEDS(event.evtName,item.key)}">{{item.value}}</span>
-              <span *ngIf="EDSMap.size==0">{{item.value}}</span> | 
+              <span *ngIf="EDSMap.size==0">{{item.value}}</span> |
             </span>
           </p>
         </div>
