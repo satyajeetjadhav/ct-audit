@@ -76,7 +76,7 @@
               check_circle_outline
             </i>
             <i class="material-icons text-danger" *ngIf="EDSMap.size>0 && !isEventInEDS(event.evtName)">
-              check_circle_outline
+              highlight_off
             </i>
           </h5>
           <p class="small mb-0">{{event.ep | datePipe}}</p>
@@ -109,6 +109,31 @@
         <label class="custom-file-label" for="inputGroupFile01">Select the Events Design CSV file</label>
       </div>
     </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Event Name</th>
+          <th>Event Property</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of EDSMap | keyvalue">
+          <td [ngClass]="{'table-success':wasEventRaised(item.key)}">{{item.key}}</td>
+          <td>
+            <table class="table">
+              <tbody>
+                <tr *ngFor="let property of item.value">
+                  <td>
+                    {{property}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 

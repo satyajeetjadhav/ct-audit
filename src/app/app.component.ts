@@ -86,12 +86,13 @@ export class AppComponent {
     let self = this;
     Papa.parse(fileLoadedEvent.target.result, {
       worker: true,
+      header: true,
       step: function (row) {
         console.log("Row:", row.data);
         // get the index of Events Name
         // get the index of Events Property
-        let iName = 1;
-        let iProperty = 2;
+        let iName = 'Event Name';
+        let iProperty = 'Event Property';
         if (row.data[iName] !== '') {
           currentlyProcessingEvent = row.data[iName];
           self.EDSMap.set(row.data[iName], [row.data[iProperty]]);
@@ -140,5 +141,16 @@ export class AppComponent {
     } else {
       return false;
     }
+  }
+
+  wasEventRaised(eventName: String) {
+    for (let i = 0; i < this.queue.length; i++) {
+      for (let j = 0; j < this.queue[i].events.length; j++) {
+        if (this.queue[i].events[j].evtName === eventName) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
