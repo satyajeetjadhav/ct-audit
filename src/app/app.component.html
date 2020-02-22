@@ -71,17 +71,46 @@
     <div class="mt-4" *ngIf="queueItem.events">
       <div class="mt-4" *ngFor="let event of queueItem.events | reverse">
         <div>
-          <h5>{{event.evtName}} <a class="small ml-2" *ngIf="event.CTID" href={{getProfileUrl(event.CTID)}}
-              target="_blank">
+          <h5>{{event.evtName}} <i class="material-icons text-success"
+              *ngIf="EDSMap.size>0 && isEventInEDS(event.evtName)">
+              check_circle_outline
+            </i>
+            <i class="material-icons text-danger" *ngIf="EDSMap.size>0 && !isEventInEDS(event.evtName)">
+              check_circle_outline
+            </i>
+            <a class="small ml-2" *ngIf="event.CTID" href={{getProfileUrl(event.CTID)}} target="_blank">
               View Profile</a></h5>
           <p class="small mb-0">{{event.ep | datePipe}}</p>
           <p class="small">CTID : {{event.CTID}}</p>
           <span class="badge badge-dark" *ngIf="event.f">First Session</span>
-          <p class="mt-2"><span *ngFor="let item of event.evtData | keyvalue" placement="top"
-              ngbTooltip="{{item.key}}">{{item.value}} | </span></p>
+          <p class="mt-2">
+            <span *ngFor="let item of event.evtData | keyvalue" placement="top" ngbTooltip="{{item.key}}">
+              <span *ngIf="EDSMap.size>0"
+                [ngClass]="{'text-success':isEventPropertyInEDS(event.evtName, item.key),'text-danger': !isEventPropertyInEDS(event.evtName,item.key)}">{{item.value}}</span>
+              <span *ngIf="EDSMap.size==0">{{item.value}}</span> | 
+            </span>
+          </p>
         </div>
       </div>
     </div>
   </div>
 
-  <!--router-outlet></router-outlet -->
+  <!--div class="form-group">
+    <input type="file" (change)="onFileSelect($event.target)" name="myfile">
+  </div-->
+
+  <div class=" col-sm mt-4">
+    <h3>Events Design Fidelity</h3>
+    <div class="input-group">
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"
+          (change)="onFileSelect($event.target)" name="myfile">
+        <label class="custom-file-label" for="inputGroupFile01">Select the Events Design CSV file</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--router-outlet></router-outlet -->
