@@ -9,7 +9,7 @@ export class LogParserIosService {
     AccountDetails: false,
     PushNotificationEnabled: false,
     registerPNDataEntry: false,
-    AutoIntegrate: 'false'
+    AutoIntegrate: false
   }
 
 
@@ -22,7 +22,7 @@ export class LogParserIosService {
       SDK_Version: '',
       Profile_Method: '',
       Push_Token: '',
-      AutoIntegrate: 'false'
+      AutoIntegrate: false
     },
     queue: []
 
@@ -40,7 +40,7 @@ export class LogParserIosService {
         SDK_Version: '',
         Profile_Method: '',
         Push_Token: '',
-        AutoIntegrate: 'false'
+        AutoIntegrate: false
       },
       queue: []
     }
