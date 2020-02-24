@@ -12,26 +12,22 @@ import * as Papa from 'papaparse';
 export class AppComponent {
   title = 'audit';
   logForm;
-  log;
-  result;
   metadata;
   queue;
   EDSMap = new Map();
+  iOS = false;
 
   constructor(
     private logParser: LogParserService,
     private logParseriOS: LogParserIosService,
     private formBuilder: FormBuilder
   ) {
-
     this.logForm = this.formBuilder.group({
       log: ''
     });
   }
 
   onSubmit(customerData) {
-    // Process checkout data here
-
     this.metadata = {};
     this.queue = [];
     if (this.checkForOS(customerData.log)) {
@@ -57,6 +53,7 @@ export class AppComponent {
     let logLines = logData.split('\n');
     for (let line of logLines) {
       if (line.includes('New event processed:')) {
+        this.iOS = true;
         return true;
       }
       else if (line.includes('Queued Event:')) {
@@ -77,20 +74,12 @@ export class AppComponent {
   }
 
   onFileLoad(fileLoadedEvent) {
-    // const textFromFileLoaded = fileLoadedEvent.target.result;
-    // this.csvContent = textFromFileLoaded;
-    // console.log(this.csvContent);
-    // alert(this.csvContent);
-
     let currentlyProcessingEvent = '';
     let self = this;
     Papa.parse(fileLoadedEvent.target.result, {
       worker: true,
       header: true,
       step: function (row) {
-        console.log("Row:", row.data);
-        // get the index of Events Name
-        // get the index of Events Property
         let iName = 'Event Name';
         let iProperty = 'Event Property';
         if (row.data[iName] !== '') {
@@ -99,10 +88,6 @@ export class AppComponent {
         } else {
           self.EDSMap.get(currentlyProcessingEvent).push(row.data[iProperty]);
         }
-      },
-      complete: function () {
-        console.log("All done!");
-        console.log(self.EDSMap);
       }
     });
   }
@@ -112,12 +97,6 @@ export class AppComponent {
     const files = input.files;
 
     if (files && files.length) {
-      /*
-       console.log("Filename: " + files[0].name);
-       console.log("Type: " + files[0].type);
-       console.log("Size: " + files[0].size + " bytes");
-       */
-
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
@@ -152,5 +131,35 @@ export class AppComponent {
       }
     }
     return false;
+  }
+
+  wasEventPropertyRaised(eventName: String, propertyName: string) {
+    for (let i = 0; i < this.queue.length; i++) {
+      for (let j = 0; j < this.queue[i].events.length; j++) {
+        if (this.queue[i].events[j].evtName === eventName) {
+          if (Object.keys(this.queue[i].events[j].evtData).indexOf(propertyName) > -1) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  reset() {
+    for (const prop of Object.getOwnPropertyNames(this.metadata)) {
+      delete this.metadata[prop];
+    }
+    this.queue = [];
+    this.EDSMap = new Map();
+  }
+
+  showResults() {
+    if ((this.metadata != null && (Object.keys(this.metadata)).length > 0)
+      || (this.queue != null && this.queue.length > 0)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

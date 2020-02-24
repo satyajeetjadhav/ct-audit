@@ -1,17 +1,18 @@
 <div class="container">
-  <div class="col-sm mt-4">
-    <form [formGroup]="logForm" (ngSubmit)="onSubmit(logForm.value)">
+  <div class="mt-4">
+    <form #myForm="ngForm" [formGroup]="logForm" (ngSubmit)="onSubmit(logForm.value)">
       <div class="form-group">
-        <label for="exampleInputEmail1">Paste the CleverTap Debug logs here</label>
-        <textarea type="email" class="form-control" id="exampleInputEmail1" formControlName="log" rows="20"></textarea>
+        <textarea type="email" class="form-control" id="exampleInputEmail1" formControlName="log" rows="10"
+          placeholder="Paste the CleverTap Debug logs here"></textarea>
         <small id="emailHelp" class="form-text text-muted">Please filter the logs in logcat using the string 'CleverTap'
           for Android and string '[Clevertap]' for iOS before pasting here.</small>
       </div>
       <button type="submit" class="btn btn-primary" [disabled]="!logForm.valid">Evaluate</button>
+      <button type="button" (click)="myForm.reset(); reset()" class="btn btn-secondary ml-2">Clear</button>
     </form>
   </div>
 
-  <div class="mt-4" *ngIf="metadata || queue">
+  <div class="mt-4" *ngIf="showResults()">
     <h1>Audit results</h1>
     <div class="mt-4" *ngIf="metadata">
       <h2>Metadata</h2>
@@ -59,11 +60,9 @@
           <p>{{datum.ep | datePipe}}</p>
           <p><span *ngFor="let item of datum.data | keyvalue" placement="top" ngbTooltip="{{item.key}}">{{item.value}} |
             </span></p>
-
         </div>
       </div>
     </div>
-    <hr>
   </div>
 
   <h2 *ngIf="queue && queue.length>0">Events</h2>
@@ -95,12 +94,9 @@
     </div>
   </div>
 
-  <!--div class="form-group">
-    <input type="file" (change)="onFileSelect($event.target)" name="myfile">
-  </div-->
-
-  <div class=" col-sm mt-4">
+  <div class="mt-4">
     <h3>Events Design Fidelity</h3>
+    <p>Compare the events raised with the definitions in the Events Design Sheet CSV.</p>
     <div class="input-group">
       <div class="custom-file">
         <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"
@@ -109,7 +105,7 @@
       </div>
     </div>
 
-    <table class="table">
+    <table class="table" *ngIf="EDSMap.size>0">
       <thead>
         <tr>
           <th>Event Name</th>
@@ -118,12 +114,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of EDSMap | keyvalue">
-          <td [ngClass]="{'table-success':wasEventRaised(item.key)}">{{item.key}}</td>
+          <td [ngClass]="{'text-success':wasEventRaised(item.key)}">{{item.key}}</td>
           <td>
             <table class="table">
               <tbody>
                 <tr *ngFor="let property of item.value">
-                  <td>
+                  <td [ngClass]="{'text-success':wasEventPropertyRaised(item.key, property)}">
                     {{property}}
                   </td>
                 </tr>
