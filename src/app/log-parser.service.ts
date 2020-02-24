@@ -55,6 +55,24 @@ export class LogParserService {
 
   init() {
 
+    this.flags = {
+      activityLifecycleCallback: false,
+      accountRegion: false,
+      accountId: false,
+      accountToken: false,
+      sdkVersion: false,
+      CTPushNotificationReceiver: false,
+      InstallReferrerBroadcastReceiver: false,
+      CTNotificationIntentService: false,
+      CTBackgroundJobService: false,
+      CTBackgroundIntentService: false,
+      InAppNotificationActivity: false,
+      FcmMessageListenerService: false,
+      FcmTokenListenerService: false,
+      UIEditor: false
+    }
+
+
     this.result = {
       metadata: {
         ActivityLifecycleCallback: false,
