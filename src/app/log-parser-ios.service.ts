@@ -8,7 +8,8 @@ export class LogParserIosService {
   flags = {
     AccountDetails: false,
     PushNotificationEnabled: false,
-    registerPNDataEntry: false
+    registerPNDataEntry: false,
+    AutoIntegrate: 'false'
   }
 
 
@@ -20,7 +21,8 @@ export class LogParserIosService {
       PushNotificationEnabled: false,
       SDK_Version: '',
       Profile_Method: '',
-      Push_Token: ''
+      Push_Token: '',
+      AutoIntegrate: 'false'
     },
     queue: []
 
@@ -37,7 +39,8 @@ export class LogParserIosService {
         PushNotificationEnabled: false,
         SDK_Version: '',
         Profile_Method: '',
-        Push_Token: ''
+        Push_Token: '',
+        AutoIntegrate: 'false'
       },
       queue: []
     }
@@ -61,6 +64,10 @@ export class LogParserIosService {
                 this.checkForPN(line);
                 break;
               }
+              case 'AutoIntegrate':{
+                this.checkForAutoIntegrate(line);
+                break;
+              }
               default: {
                 //statements; 
                 break;
@@ -79,6 +86,12 @@ export class LogParserIosService {
     })
   }
 
+  checkForAutoIntegrate(logLine: String){
+    if (logLine.includes('autoIntegration enabled')) {
+      this.flags.AutoIntegrate = true;
+      this.result.metadata.AutoIntegrate = true;
+    }
+  }
 
   accountDetails(logLine: String) {
     if (logLine.includes('Initializing default CleverTap SDK')) {
@@ -106,6 +119,7 @@ export class LogParserIosService {
       let eventJSONArrayString = (tempStr.split('to'))[0]
       //console.log('Final String '+eventJSONArrayString);
       let eventJSONArray;
+      let CTID;
       try {
         eventJSONArray = JSON.parse(eventJSONArrayString);
         //get sdk version
@@ -119,12 +133,14 @@ export class LogParserIosService {
         events: [],
         profile: [],
         meta: [],
-        data: []
+        data: [],
+        CTID: ''
       }
       eventJSONArray.forEach(eventJSON => {
         if (eventJSON['type'] === 'profile') {
           queueObj.profile.push(eventJSON);
         } else if ((eventJSON['type'] === 'event')) {
+          eventJSON['CTID'] = CTID;
           queueObj.events.push(eventJSON);
         } else if ((eventJSON['type'] === 'data')) {
           if (this.flags.PushNotificationEnabled) {
@@ -136,6 +152,7 @@ export class LogParserIosService {
           }
 
         } else if ((eventJSON['type'] === 'meta')) {
+          CTID = eventJSON["g"];
           queueObj.meta.push(eventJSON);
         }
       });

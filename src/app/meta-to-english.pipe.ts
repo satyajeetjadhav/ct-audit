@@ -14,22 +14,65 @@ export class MetaToEnglishPipe implements PipeTransform {
           return 'Activity Lifecycle Callbacks are not registered. This is needed for proper functioning of the SDK.'
         }
       }
-      case 'AccountRegion': {
+      case 'AccountRegion':
+      case 'CleverTapRegion': {
         if(item.value ===''){
           return 'Account region is not set.';
         } else {
           return 'Account region is ' + item.value;
         }
       }
-      case 'AccountId': {
+      case 'CleverTapToken':{
+        if(item.valye ===''){
+          return 'Account token not set.';
+        }
+        else{
+          return 'Acoount Token is '+item.value;
+        }
+      }
+      case 'Profile_Method':{
+        if(item.valye ===''){
+          return;
+        }
+        else{
+          return 'Profile Method is '+item.value;
+        }
+      }
+      case 'AccountId':
+      case 'CleverTapAccountID': {
         if (item.value.includes('TEST-')) {
           return 'Account Id is ' + item.value;
         } else {
           return 'Account Id is ' + item.value + '. This does not seem to be a test account. Test data sent to the production account can not be reset later.';
         }
       }
-      case 'SdkVersion': {
+      case 'SdkVersion':
+      case 'SDK_Version': {
         return 'SDK version is ' + item.value;
+      }
+      case 'PushNotificationEnabled':{
+        if(item.value){
+          return 'Push Notification enabled';
+        }
+        else{
+          return 'Push Notification not enabled';
+        }
+      }
+      case 'AutoIntegrate':{
+        if(item.value){
+          return 'CleverTap.autoIntegrate() enabled';
+        }
+        else{
+          return;
+        }
+      }
+      case 'Push_Token':{
+        if(item.value ===''){
+          return;
+        }
+        else{
+          return 'Pust Token registered is '+item.value;
+        }
       }
       case 'CTPushNotificationReceiver': {
         if (item.value) {
