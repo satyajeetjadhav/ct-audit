@@ -76,11 +76,32 @@ export class LogParserIosService {
           }
         }
       });
-      logLines.forEach(line => {
+      /*logLines.forEach(line => {
         if (line.includes('onUserLogin')) {
           this.result.metadata.Profile_Method = 'onUserLogin';
         }
         this.queuedEvent(line);
+      });*/
+      let halfline = ''
+      logLines.forEach(line => {
+        if (line.includes('onUserLogin')) {
+          this.result.metadata.Profile_Method = 'onUserLogin';
+        }
+        let lineBroken = false; // for really long log lines
+        if (halfline.length > 0) {
+          let splitline = line.split(' ');
+          splitline.splice(0, 4);
+          splitline.join(' ');
+          console.log(splitline);
+          lineBroken = this.queuedEvent(halfline + ' ' + splitline);
+        } else {
+          lineBroken = this.queuedEvent(line);
+        }
+        if (!lineBroken) {
+          halfline = line;
+        } else {
+          halfline = ''
+        }
       });
       resolve(this.result);
     })
@@ -114,6 +135,44 @@ export class LogParserIosService {
 
   queuedEvent(logLine: String) {
     if (logLine.includes('Sending')) {
+    /*if (logLine.includes('New event processed:')) {
+        var queueObj = {
+        events: [],
+        profile: [],
+        meta: [],
+        data: [],
+        CTID: ''
+      }
+        let eventJSONArrayString = (logLine.split('New event processed:'))[1].trim();
+        //console.log('JSON STR '+eventJSONArrayString);
+        let eventJSONArray;
+        let CTID;
+        try{
+          eventJSONArray = JSON.parse(eventJSONArrayString);
+          //console.log('JSON Array '+eventJSONArray);
+        }catch (e) {
+          console.log('Exception '+e);
+        }
+        if (eventJSONArray['type'] === 'profile') {
+          queueObj.profile.push(eventJSONArray);
+        } else if ((eventJSONArray['type'] === 'event')) {
+          this.result.metadata.SDK_Version = eventJSONArray['evtData']['SDK Version'];
+          eventJSONArray['CTID'] = CTID;
+          queueObj.events.push(eventJSONArray);
+        } else if ((eventJSONArray['type'] === 'data')) {
+          if (this.flags.PushNotificationEnabled) {
+            this.result.metadata.Push_Token = eventJSONArray['data']['id']
+          }
+          if (!this.flags.registerPNDataEntry) {
+            this.flags.registerPNDataEntry = true;
+            queueObj.data.push(eventJSONArray);
+          }
+
+        } else if ((eventJSONArray['type'] === 'meta')) {
+          CTID = eventJSONArray["g"];
+          queueObj.meta.push(eventJSONArray);
+        }*/
+    
       let tempStr = (logLine.split('Sending '))[1]
       //console.log('Temp String '+tempStr);
       let eventJSONArrayString = (tempStr.split('to'))[0]
@@ -128,6 +187,7 @@ export class LogParserIosService {
       } catch (e) {
         console.log(e);
         console.log(logLine);
+        return false;
       }
       var queueObj = {
         events: [],
