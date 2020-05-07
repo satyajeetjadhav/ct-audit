@@ -1,0 +1,18 @@
+{
+    "items": [{
+            "name": "Sony Headphones",
+            "imgUrl": "https://assets.croma.com/medias/sys_master/images/images/hc4/h5e/8797834903582/214894_pjpeg.jpg",
+            "price": "Rs. 15000"
+        },
+        {
+            "name": "PUMA RS-X PUZZLE",
+            "imgUrl": "https://cdn.afew-store.com/assets/29/292868/1200/puma-rs-x-puzzle-puma-white-dazzling-blue-high-rise-371570-05-sneaker-packshots-0.jpg",
+            "price": "Rs. 9999"
+        },
+        {
+            "name": "Mac Book Pro",
+            "imgUrl": "https://shop.unicornstore.in/uploads/images/full/2fec5987543f5d638de7b5173e73dda9.jpg",
+            "price": "Rs. 150000"
+        }
+    ]
+}
